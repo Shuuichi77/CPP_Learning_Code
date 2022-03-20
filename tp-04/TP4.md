@@ -7,6 +7,9 @@ Le code initial de l'exercice est dans tp-04/PhoneCalls.
 1. Regardez le contenu de la classe `Phone`.\
 Conceptuellement, quelle est la différence entre un attribut de type `const Person` et un attribut de type `const Person&` ?\
 En pratique, qu'est-ce que cela change de stocker un attribut par référence ? Par exemple, quelle sera la position de `phone._owner` après l'exécution des instructions ci-dessous ?
+
+- const Person& est une référence
+
 ```cpp
 Person paul { "Paul", 3 };
 Phone  phone { paul };
@@ -33,6 +36,9 @@ far_phone.ring();					// This is the voicemail of Paul. Please leave a message.
 ```
 
 4. Comment avez-vous fait pour redéfinir le comportement de la classe ?\
+
+-> Mettre "protected" plutôt que "private" dans Phone.
+
 Testez le code ci-dessous pour voir si vous obtenez le même résultat que celui en commentaire. Si ce n'est pas le cas, corrigez votre programme. 
 ```cpp
 Person paul { "Paul", 3 };
@@ -72,15 +78,21 @@ const Phone normal_phone = far_phone;
 normal_phone.ring();
 ```
 
+- Il compile mais ça n'est pas normal : on ne devrait pas pouvoir instancier un Phone. 
+
 9. En C++, que faut-il faire pour être tout à fait sûr qu'une classe ne puisse plus être instanciée du tout ?\
 Modifiez la déclaration de `Phone::ring` pour que `Phone` ne soit plus instanciable. Comment appelle-t-on ce type de classe ?
 
-10. Pourquoi le code ci-dessous ne compile probablement plus ?
+- Pour être sûr qu'une classe ne puisse plus être instanciée du tout, on la transforme en classe abstraite.\
+  On peut faire en sorte d'ajouter "const = 0" à "Phone::ring" pour que Phone ne soit plus instanciable. Phone devient donc une classe abstraite.
+
+10.  Pourquoi le code ci-dessous ne compile probablement plus ?
 Effectuez les modifications permettant de réinstancier des objets de type `MobilePhone`, si vous ne l'aviez pas fait à la question précédente.
 ```cpp
 Person paul { "Paul", 3 };
 MobilePhone mobile_phone { paul };
 ```
+- Le code ne compile plus puisqu'on a pas réimplanter la fonction "ring" dans MobilePhone, alors que toutes les classes qui héritent de la classe abstraite Phone doivent réimplanter la fonction.
 
 
 ## Exercice 2 - Formes
@@ -97,16 +109,16 @@ Le calcul de l'intersection de deux droites est donné.
 - `rectangle.hpp`: un rectangle qui peut déjà calculer son intersection avec d'autres formes géométriques (`Shape`). L'intersection est ici calculée en utilisant ses 4 segments. 
 - `circle.hpp`: un cercle qui peut déjà calculer son intersection avec une ligne et avec un autre cercle.
 
-0. Quel conteneur proposez-vous d'utiliser pour le retour des différentes fonctions d'intersection (`PointContainer` dans `shape.hpp`) ? 
+1. Quel conteneur proposez-vous d'utiliser pour le retour des différentes fonctions d'intersection (`PointContainer` dans `shape.hpp`) ? 
 Vous devez être capable d'appeler les fonctions `front()`, `emplace_back()`, `merge()`, et `erase()` sur ce conteneur.
 <!--Trouvez un bon choix pour le container qui est retourné par les fonctions d'intersection (`PointContainer` dans `shape.hpp`).
 Ce conteneur doit être capable de faire: `front()`, `emplace_back()`, `merge()`, et `erase()`. -->
-1. Implémentez les fonctions nécessaires afin que test1 compile.
+2. Implémentez les fonctions nécessaires afin que test1 compile.
   - NOTE1: Il n'est pas nécessaire d'être fort en maths, pensez à utiliser les fonctions d'intersection qui sont données.
   - NOTE2: Un rectangle (`Rectangle`) peut déjà dire s'il contient un `Point` donné (fonction `point_is_inside`) ou bien enlever tous les points d'un `PointContainer` qui ne sont pas dedans (`filter_points_inside`). Cela peut être utile quand on calcule des intersections avec les segments de droite...
-2. Il n'est pas très pratique que toutes les formes géométriques s'appellent "some shape" sur la sortie. Modifiez les classes (sans changer le main) pour que chaque forme géométrique affiche son propre nom et ses coordonnées. Il s'agit d'obtenir une sortie du genre : `line through (0,4) & (8,0) intersects line segment (0,0)--(10,10) in:   [(2.66667,2.66667) ]`.
-3. Faites en sorte de passer tous les tests et vérifiez que toutes les intersections sont correctement calculées.
-4. \[Bonus\] Vous avez probablement remarqué que l'intersection entre 2 cercles ne fonctionne pas (même si la fonction `Circle::intersect(const Circle&)` est correcte, elle semble ne pas être appelée...). Expliquez pourquoi et modifiez le code afin que l'intersection entre deux cercles fonctionne également.
+3. Il n'est pas très pratique que toutes les formes géométriques s'appellent "some shape" sur la sortie. Modifiez les classes (sans changer le main) pour que chaque forme géométrique affiche son propre nom et ses coordonnées. Il s'agit d'obtenir une sortie du genre : `line through (0,4) & (8,0) intersects line segment (0,0)--(10,10) in:   [(2.66667,2.66667) ]`.
+4. Faites en sorte de passer tous les tests et vérifiez que toutes les intersections sont correctement calculées.
+5. \[Bonus\] Vous avez probablement remarqué que l'intersection entre 2 cercles ne fonctionne pas (même si la fonction `Circle::intersect(const Circle&)` est correcte, elle semble ne pas être appelée...). Expliquez pourquoi et modifiez le code afin que l'intersection entre deux cercles fonctionne également.
 
 ## Exercice 3 - Théorie
 

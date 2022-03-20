@@ -17,6 +17,11 @@ public:
     {}
 
     Point direction() const { return last - first; }
+    
+    PointContainer intersect(const Shape& other) const override
+    {
+        return other.intersect((*this));
+    }
 
     // intersecting a line with a line is simple: just solve (for scalars a & b) the equation system:
     //  a * direction1 + offset1 = b * direction2 + offset2
@@ -36,11 +41,10 @@ public:
         // if the lines are parallel, by convention, they don't intersect
         if ((dir1 != dir2) && (dir1 != -dir2))
         {
-            assert(dir1.y * dir2.x !=
-                   dir1.x * dir2.y); // <-- that's just how math works (dir1 & dir2 have the same length!)
+            assert(dir1.y * dir2.x != dir1.x * dir2.y); // <-- that's just how math works (dir1 & dir2 have the same length!)
             const Point offset_diff = ln.first - first;
-            const float b =
-                (dir1.x * offset_diff.y - dir1.y * offset_diff.x) / (dir1.y * dir2.x - dir1.x * dir2.y);
+            const float b = (dir1.x * offset_diff.y - dir1.y * offset_diff.x) / (dir1.y * dir2.x - dir1.x * dir2.y);
+            
             return { dir2 * b + ln.first };
         }
         return {};
