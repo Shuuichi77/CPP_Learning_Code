@@ -1,19 +1,31 @@
 #include "Parsing.h"
+#include "MinuteHand.h"
+#include "SecondHand.h"
+#include "Clock.h"
 
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 // You can call the program with the following command in order to queue 3 events at 2s, 1m3s and 10m :
 // tp2-reminders.exe "0:2 This is the first reminder" "1:3 This is the second one" "10:0 And the last"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    const auto events = parse_events(argc, argv);
+    Clock      clock;
+    const auto events           = parse_events(argc, argv);
+    const auto program_duration = 90;
 
-    const auto program_duration = 15;
+    for (const auto &event: events)
+    {
+        std::cout << event << std::endl;
+        clock.add_event(event);
+    }
+
     for (int i = 0; i < program_duration; ++i)
     {
-        // clock.tick();
+        clock.tick();
+        std::cout << clock << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
